@@ -1,0 +1,16 @@
+# Site navigation links
+
+- title: JavaScript
+  url: #e.g. /newpage/ this is the url for the new page
+  excerpt: notes on common JS practices
+  image: JS-es6_logos.png
+
+- title: JS Frameworks
+  url:
+  excerpt: insights on some of the most popular JS frameworks
+  image: white-lights.jpg
+
+- title: Projects
+  url:
+  excerpt: where it all happens
+  image: code-teaser.png

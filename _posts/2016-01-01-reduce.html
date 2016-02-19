@@ -1,0 +1,297 @@
+---
+layout: article
+title: The Many Uses of Reduce()
+share: #set to false to hide the social media links at the bottom of articles
+comments: #set to true to enable commenting on an article
+ads: #set to true to show ads on the post/page
+published: true
+date: 2016-01-01 #YYYY-MM-DD published date of article
+modified: #YYYY-MM-DD overides published date in blog and used as metadata for search engines
+image: 
+  teaser: swiss_army_knife_teaser.png #this appears on the archive grid 400 x 250 px
+  feature: alice_drink-me_feature.png #this appears when viewing the article 1600 x 800 px
+  credit: #name of the person or site you wish to credit
+  creditlink: #url to the person's site or licensing
+categories: javascript
+tags: 
+---
+
+
+
+
+
+<p>
+Filter, map, or flatten an array by calling reduce(). See how this 
+versatile function can serve many purposes.
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Canonical Reduce</a></li>
+<li><a href="#sec-2">2 Flatten an Array</a></li>
+<li><a href="#sec-3">3 Eliminate Duplicate Elements</a></li>
+<li><a href="#sec-4">4 Filter an Array</a></li>
+<li><a href="#sec-5">5 Filter and Map</a></li>
+<li><a href="#sec-6">6 Test Every Element</a></li>
+<li><a href="#sec-7">7 Recursive Reduce()</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Canonical Reduce</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>We begin with the most common example used to illustrate how to call
+<code>reduce()</code> on an array.  The task is to sum all of the elements of an array.
+</p>
+
+
+<pre class="src src-js"><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">numbers</span> = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+<span style="color: #729fcf;">var</span> <span style="color: #ef2929;">letters</span> = [<span style="color: #ad7fa8;">'j'</span>, <span style="color: #ad7fa8;">'a'</span>, <span style="color: #ad7fa8;">'v'</span>, <span style="color: #ad7fa8;">'a'</span>, <span style="color: #ad7fa8;">'s'</span>, <span style="color: #ad7fa8;">'c'</span>, <span style="color: #ad7fa8;">'r'</span>, <span style="color: #ad7fa8;">'i'</span>, <span style="color: #ad7fa8;">'p'</span>, <span style="color: #ad7fa8;">'t'</span>];
+
+console.log(
+  numbers.reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">element</span>) {
+    memo += element;
+    <span style="color: #729fcf;">return</span> memo;
+  }, 0)
+);
+
+console.log(
+  letters.reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">element</span>) {
+    memo += element;
+    <span style="color: #729fcf;">return</span> memo;
+  }, <span style="color: #ad7fa8;">''</span>)
+);
+</pre>
+
+
+<pre class="example">
+45
+javascript
+undefined
+</pre>
+
+
+<p>
+A callback function must always be passed to <code>reduce()</code> which will 
+operate on each element of the array. The variable <code>memo</code> is passed 
+to each subsequent operation of the callback.  
+</p>
+<p>
+This is done by 
+returning <code>memo</code> at the end of the callback. The value of <code>memo</code> is 
+returned by <code>reduce()</code> after the callback operates on the final element.
+</p>
+<p>
+A second optional argument passed to <code>reduce</code> is the initial value of the 
+accumulator. When summing numbers the inital value of <code>memo</code> was set to <code>0</code> 
+but when summing letters the initial value of <code>memo</code> is set to an empty string.
+</p>
+<p>
+The index at each element and the calling array can be passed to the callback
+function to make more complex operations at each element.
+</p>
+
+
+<pre class="src src-js">console.log(
+  [1, 7, 4, 9, 5, 78, 23].reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">element</span>, <span style="color: #ef2929;">index</span>, <span style="color: #ef2929;">array</span>) {
+    <span style="color: #729fcf;">if</span> (index === array.length) memo += element * array[index + 1];
+      <span style="color: #729fcf;">else</span> memo += element;
+    <span style="color: #729fcf;">return</span> memo;
+  }, 0)
+);
+</pre>
+
+
+<pre class="example">
+127
+undefined
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Flatten an Array</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>Primitive data types were passed as the initial value for the accumulator <code>memo</code> 
+in the previous examples, but an object or object-like (i.e. array) data type 
+may also be passed.
+</p>
+<p>
+By passing an empty array and summing over the elements of a 2D array we can 
+flatten the array.
+</p>
+
+
+<pre class="src src-js">console.log(
+  [[1, 2], [3, 4], [5, 6], [7, 8]].reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">tuple</span>) {
+    memo = memo.concat(tuple);
+    <span style="color: #729fcf;">return</span> memo;
+  }, [])
+);
+</pre>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="right" /><col class="right" /><col class="right" /><col class="right" /><col class="right" /><col class="right" /><col class="right" /><col class="right" />
+</colgroup>
+<tbody>
+<tr><td class="right">1</td><td class="right">2</td><td class="right">3</td><td class="right">4</td><td class="right">5</td><td class="right">6</td><td class="right">7</td><td class="right">8</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">Eliminate Duplicate Elements</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>This example shows we can pass an empty object as the initial value of the 
+accumulator.  By placing the elements in an object we can eliminate duplicated
+elements in the array.
+</p>
+
+
+
+<pre class="src src-js">console.log(
+  Object.keys([<span style="color: #ad7fa8;">'a'</span>, <span style="color: #ad7fa8;">'b'</span>, <span style="color: #ad7fa8;">'c'</span>, <span style="color: #ad7fa8;">'a'</span>, <span style="color: #ad7fa8;">'d'</span>, <span style="color: #ad7fa8;">'b'</span>].reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">letter</span>) {
+    memo[letter] = letter;
+    <span style="color: #729fcf;">return</span> memo;
+  }, {}))
+);
+</pre>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">a</td><td class="left">b</td><td class="left">c</td><td class="left">d</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">Filter an Array</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>An array can easily be filtered with reduce by using an if statement
+in the body of the callback function.
+</p>
+
+
+<pre class="src src-js">console.log(
+  [1, 2, 3, 4, 5, 6, 7].reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">number</span>) {
+    <span style="color: #729fcf;">if</span> (number % 2 === 0) memo.push(number);
+    <span style="color: #729fcf;">return</span> memo;
+  }, [])
+);
+</pre>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="right" /><col class="right" /><col class="right" />
+</colgroup>
+<tbody>
+<tr><td class="right">2</td><td class="right">4</td><td class="right">6</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5">Filter and Map</h2>
+<div class="outline-text-2" id="text-5">
+
+<p>Filering and mapping can both be accomplished with if statements and by 
+making sure that a value is passed for each element of the array.
+</p>
+
+
+<pre class="src src-js">console.log(
+  [1, 2, 3, 4, 5, 6, 7].reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">number</span>) {
+    <span style="color: #729fcf;">if</span> (number % 2 === 0) memo.push(<span style="color: #73d216;">true</span>);
+      <span style="color: #729fcf;">else</span> memo.push(<span style="color: #73d216;">false</span>);
+    <span style="color: #729fcf;">return</span> memo;
+  }, [])
+);
+</pre>
+
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+<colgroup><col class="left" /><col class="left" /><col class="left" /><col class="left" /><col class="left" /><col class="left" /><col class="left" />
+</colgroup>
+<tbody>
+<tr><td class="left">false</td><td class="left">true</td><td class="left">false</td><td class="left">true</td><td class="left">false</td><td class="left">true</td><td class="left">false</td></tr>
+</tbody>
+</table>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-6" class="outline-2">
+<h2 id="sec-6">Test Every Element</h2>
+<div class="outline-text-2" id="text-6">
+
+<p>To check if every element of an array passes a given test called 
+<code>test()</code> assign <code>memo</code> to an initial value of <code>true</code> and assign 
+<code>memo &amp;&amp; test(element)</code> at each element of the array.
+</p>
+<p>
+In JavaScript, the left side of the AND operator is evaluted first.
+If the left side is false, there is no need to evaluate the right side 
+and code execution will continue to the next line.  
+</p>
+<p>
+If the left side is true, then the right side is evaluated and this
+value assigned to memo.  
+</p>
+
+
+<pre class="src src-js">console.log(
+  [1, 2, 3, 4, 5, 6, 7].reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">number</span>) {
+    memo = memo &amp;&amp; number &gt; 5;
+    <span style="color: #729fcf;">return</span> memo;
+  }, <span style="color: #73d216;">true</span>)
+);
+</pre>
+
+
+<pre class="example">
+false
+undefined
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-7" class="outline-2">
+<h2 id="sec-7">Recursive Reduce()</h2>
+<div class="outline-text-2" id="text-7">
+
+
+
+
+</div>
+</div>

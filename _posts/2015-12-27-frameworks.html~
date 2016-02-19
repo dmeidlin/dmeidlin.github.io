@@ -1,0 +1,274 @@
+---
+layout: post
+title: Posting with Org-Mode
+published: true
+date: 2015-12-25
+categories: emacs, org-mode
+tags: post, org-mode, emacs
+---
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 AJAX</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Asynchronous Javascript And Xml</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1 allows client-server communication without page reload</a></li>
+<li><a href="#sec-1-1-2">1.1.2 asynchronous means not having to reload the page</a></li>
+<li><a href="#sec-1-1-3">1.1.3 Make requests to the server without reloading the page.</a></li>
+<li><a href="#sec-1-1-4">1.1.4 Receive and work with data from the server.</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-2">1.2 same-origin policy</a></li>
+<li><a href="#sec-1-3">1.3 Uses the XMLHttpRequest object</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1 communicate with server-side scripts</a></li>
+<li><a href="#sec-1-3-2">1.3.2 send and receive information in a variety of formats</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4 How to make an HTTP request</a></li>
+<li><a href="#sec-1-5">1.5 Handling the Sever Response</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">AJAX</h2>
+<div class="outline-text-2" id="text-1">
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Asynchronous Javascript And Xml</h3>
+<div class="outline-text-3" id="text-1-1">
+
+
+</div>
+
+<div id="outline-container-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1">allows client-server communication without page reload</h4>
+<div class="outline-text-4" id="text-1-1-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2">asynchronous means not having to reload the page</h4>
+<div class="outline-text-4" id="text-1-1-2">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3">Make requests to the server without reloading the page.</h4>
+<div class="outline-text-4" id="text-1-1-3">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4">Receive and work with data from the server.</h4>
+<div class="outline-text-4" id="text-1-1-4">
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-2" class="outline-3">
+<h3 id="sec-1-2">same-origin policy</h3>
+<div class="outline-text-3" id="text-1-2">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3" class="outline-3">
+<h3 id="sec-1-3">Uses the XMLHttpRequest object</h3>
+<div class="outline-text-3" id="text-1-3">
+
+
+</div>
+
+<div id="outline-container-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1">communicate with server-side scripts</h4>
+<div class="outline-text-4" id="text-1-3-1">
+
+</div>
+
+</div>
+
+<div id="outline-container-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2">send and receive information in a variety of formats</h4>
+<div class="outline-text-4" id="text-1-3-2">
+
+<ol>
+<li>JSON
+</li>
+<li>XML
+</li>
+<li>HTML
+</li>
+<li>text
+</li>
+</ol>
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-1-4" class="outline-3">
+<h3 id="sec-1-4">How to make an HTTP request</h3>
+<div class="outline-text-3" id="text-1-4">
+
+<ol>
+<li>Create an instance of a class that can make requests.
+</li>
+</ol>
+
+
+
+
+<pre class="src src-js"><span class="linenr">1:  </span><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">httpRequest</span> = <span style="color: #729fcf;">new</span> <span style="color: #228b22; font-weight: bold;">XMLHttpRequest</span>();
+</pre>
+
+<ol>
+<li>Define what will happen once the server response is received.
+</li>
+</ol>
+
+
+
+
+<pre class="src src-js"><span class="linenr">2:  </span>httpRequest.onreadystatechange = handleResponse;
+</pre>
+
+<p>
+The handleResponse function will be defined later.  Alternatively, 
+an anonymous function could have been used here instead.
+</p><ol>
+<li>Now, make the request by calling open() and send() like this:
+</li>
+</ol>
+
+
+
+
+<pre class="src src-js"><span class="linenr">3:  </span>httpRequest.open(<span style="color: #ad7fa8;">'GET'</span>, <span style="color: #ad7fa8;">'http://www.example.com/some/route'</span>, <span style="color: #73d216;">true</span>);
+<span class="linenr">4:  </span>httpRequest.send(<span style="color: #73d216;">null</span>);
+</pre>
+
+<ul>
+<li>The first parameter of the call to open() is the HTTP request
+  method: GET, POST, HEAD, or any other method supported by the
+  server.
+</li>
+<li>The second parameter is the URL of the page you ar requesting.
+</li>
+<li>The optional third parameter sets whether the request is 
+  asynchronous.  If TRUE, the execution of the javascript function
+  will continue while the response of the server has not yet 
+  arrived.
+</li>
+</ul>
+
+<p>The parameter to the send() method can be any data you want to 
+send to the server if the request method is POST. In this example,
+the method is GET, so null is passed to send.  If POST or PUT is 
+involed instead, then in addition to passing some non-null 
+parameter that the server can parse easily such as a 
+JSON-stringified object the MIME type should be set in the request
+header using the following line:
+</p>
+
+
+<pre class="src src-js">httpRequest.setRequestHeader(<span style="color: #ad7fa8;">'Content-Type'</span>, <span style="color: #ad7fa8;">'application/JSON'</span>);
+</pre>
+
+<p>
+and this header must be set before calling send().  The complete 
+list of possible media types is maintained by the 
+<a href="https://www.iana.org/assignments/media-types/media-types.xhtml">Internet Assigned Numbers Authority</a> (IANA).
+</p></div>
+
+</div>
+
+<div id="outline-container-1-5" class="outline-3">
+<h3 id="sec-1-5">Handling the Sever Response</h3>
+<div class="outline-text-3" id="text-1-5">
+
+<p>Now the handleResponse function will be defined:
+</p><ol>
+<li>check for the state of the request,
+</li>
+</ol>
+
+
+
+
+<pre class="src src-js"><span class="linenr">5:  </span><span style="color: #729fcf;">function</span> <span style="color: #edd400; font-weight: bold;">handleRequest</span> () {
+<span class="linenr">6:  </span>    <span style="color: #729fcf;">if</span> (httpRequest.readyState === XMLHttpRequest.DONE) {
+<span class="linenr">7:  </span>        <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">the response is received with no errors</span>
+<span class="linenr">8:  </span>    } <span style="color: #729fcf;">else</span> {
+<span class="linenr">9:  </span>        <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">the response is not here or ready</span>
+</pre>
+
+<p>
+and if the state has the value of XMLHttpRequest.DONE (evaluating 
+to 4) then the full server response has been received and it's OK
+for handleResponse() to continue processing it.  The full list of 
+properties is documented by the <a href="https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#Properties">Mozilla Developer Network</a> (MDN);
+</p><ol>
+<li>Check the response code of the HTTP server response.
+</li>
+</ol>
+
+
+
+
+<pre class="src src-js"><span class="linenr">10:  </span><span style="color: #729fcf;">if</span> (httpRequest.status === 200) {
+<span class="linenr">11:  </span>    <span style="color: #4f4f4f; font-style: italic;">// </span><span style="color: #4f4f4f; font-style: italic;">perfect!</span>
+<span class="linenr">12:  </span>} <span style="color: #729fcf;">else</span> {
+<span class="linenr">13:  </span>    <span style="color: #4f4f4f; font-style: italic;">// </span><span style="color: #4f4f4f; font-style: italic;">there was a problem with the request,</span>
+<span class="linenr">14:  </span>    <span style="color: #4f4f4f; font-style: italic;">// </span><span style="color: #4f4f4f; font-style: italic;">for example the response may contain a 404 (Not Found)</span>
+<span class="linenr">15:  </span>    <span style="color: #4f4f4f; font-style: italic;">// </span><span style="color: #4f4f4f; font-style: italic;">or 500 (Internal Server Error) response code</span>
+<span class="linenr">16:  </span>}
+</pre>
+
+<p>
+All the possible codes are listed on the <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">World Wide Web Consortium</a> 
+(W3C) site.
+</p><ol>
+<li>Access the data and do something with it.
+</li>
+</ol>
+
+<p>If you used an synchronous request (third parameter of open() was set
+to false) you don't need to specify a function, you can access the
+data return by the server right after calling send(), because the
+script will stop and wait for the server answer.
+</p>
+<p>
+For an asynchronous request there are two options for accessing 
+the data:
+</p><ul>
+<li>httpRequest.responseText - returns the server response as a 
+  string of text; and
+</li>
+<li>httpRequest.responseXML - returns the response as an XMLDocument 
+</li>
+</ul>
+
+<p>object you can traverse using the JavaScript DOM functions.
+</p></div>
+</div>
+</div>

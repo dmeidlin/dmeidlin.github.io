@@ -1,0 +1,84 @@
+---
+layout: post
+title: Only Unique
+published: true
+date: 2015-12-25
+categories: toy-problem, data-structure, racing-algorithm
+tags: post, org-mode, emacs
+---
+
+
+
+<p>
+Given a string, remove any characters that are not unique from the string.
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Solution</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Solution</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>The function called <code>onlyUnique</code> will first <code>split()</code> a given string
+called <code>string</code> into an array of characters.  It will then <code>reduce()</code>
+this array of characters to an object called <code>unique</code>.
+</p>
+<p>
+Each character of <code>string</code> appears only once as a key in <code>unique</code>, and
+the value is the same as the key if the character appears only once in
+<code>string</code> or is an empty string if the character appears more than once
+in <code>string</code>.
+</p>
+<p>
+<code>onlyUnique</code> returns the concatenation of all property values in
+<code>unique</code>.
+</p>
+
+
+<pre class="src src-js"><span class="linenr"> 1:  </span><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">onlyUnique</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">string</span>) {
+<span class="linenr"> 2:  </span>  <span style="color: #ad7fa8;">'use strict'</span>;
+<span class="linenr"> 3:  </span>  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">unique</span>;
+<span class="linenr"> 4:  </span>  string = string.split(<span style="color: #ad7fa8;">''</span>);
+<span class="linenr"> 5:  </span>
+<span class="linenr"> 6:  </span>  unique = string.reduce(<span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">letter</span>) {
+<span class="linenr"> 7:  </span>    memo[letter] = letter <span style="color: #729fcf;">in</span> memo ? <span style="color: #ad7fa8;">''</span> : letter;
+<span class="linenr"> 8:  </span>    <span style="color: #729fcf;">return</span> memo;
+<span class="linenr"> 9:  </span>  }, {});
+<span class="linenr">10:  </span>
+<span class="linenr">11:  </span>  string = <span style="color: #ad7fa8;">''</span>;
+<span class="linenr">12:  </span>  
+<span class="linenr">13:  </span>  <span style="color: #729fcf;">for</span> (<span style="color: #729fcf;">var</span> <span style="color: #ef2929;">letter</span> <span style="color: #729fcf;">in</span> unique) {
+<span class="linenr">14:  </span>    string += unique[letter];
+<span class="linenr">15:  </span>  }
+<span class="linenr">16:  </span>  
+<span class="linenr">17:  </span>  <span style="color: #729fcf;">return</span> string;
+<span class="linenr">18:  </span>};
+<span class="linenr">19:  </span>
+<span class="linenr">20:  </span><span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">some test cases</span>
+<span class="linenr">21:  </span>console.log(onlyUnique(<span style="color: #ad7fa8;">'shdgfgjhh'</span>));
+<span class="linenr">22:  </span>console.log(onlyUnique(<span style="color: #ad7fa8;">''</span>));
+<span class="linenr">23:  </span>console.log(onlyUnique(<span style="color: #ad7fa8;">'ssssssss'</span>));
+<span class="linenr">24:  </span>console.log(onlyUnique(<span style="color: #ad7fa8;">'   j   '</span>));
+</pre>
+
+
+<p>
+Testing <code>onlyUnique</code> with a few examples shows that it returns only 
+the unique characters of each passed string.
+</p><pre class="example">
+sdfj
+
+
+j
+undefined
+</pre>
+
+</div>
+</div>

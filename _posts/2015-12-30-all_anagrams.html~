@@ -1,0 +1,147 @@
+---
+layout: post
+title: All Anagrams
+published: true
+date: 2015-12-25
+categories: toy-problem, data-structure, racing-algorithm
+tags: post, org-mode, emacs
+---
+
+
+
+<p>
+Given a single input string, write a function that produces all
+possible anagrams of a string and outputs them as an array. At first,
+don’t worry about repeated strings. What time complexity is your
+solution?
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Parameter</a></li>
+<li><a href="#sec-2">2 Solution</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Parameter</h2>
+<div class="outline-text-2" id="text-1">
+
+<p><code>string</code> (required) - a string of characters
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Solution</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>For a <code>string</code> with <code>n</code> characters there will be <code>n!</code> unique
+permutations that form anagrams.  If a character is repeated <code>r</code> times
+in <code>string</code> then some of the permutations will repeat the same
+anagram.  The number of uniques anagrams is then reduced by the factor
+<code>r!</code>.
+</p>
+<p>
+<a href="https://en.wikipedia.org/wiki/Stirling's_approximation">Stirling's formula</a> states that for large <code>n</code>, <code>n!</code> is approximately
+<code>n^n</code>, so reducing the time and space complexity, if possible, is
+definitely of interest.  If we know there are characters in <code>string</code>
+that repeat, then we want to avoid computing <code>r!</code> times as many
+redundant anagrams.
+</p>
+<p>
+For instance, if <code>string</code> is all characters of the alphabet,
+</p>
+
+
+<pre class="src src-example">'abcdefghijklmnopqrstuvwxyz'
+</pre>
+
+<p>
+then there are 4.03E26 different anagrams to form; however, if
+<code>string</code> is <code>a</code> repeated 25 times,
+</p>
+
+
+<pre class="src src-example">'aaaaaaaaaaaaaaaaaaaaaaaaaa'
+</pre>
+
+<p>
+then there is only one anagram: <code>string</code> itself. 
+</p>
+<p>
+The function begins forming an anagram by selecting one of the
+characters from the string and adding it to an empty string literal.
+It then recursively calls itself to select another character from the
+remaining string to concatenate to the anagram.
+</p>
+<p>
+An anagram is completed and pushed to an array named <code>collection</code> 
+when there are no longer any characters remaining in the string.  
+</p>
+<p>
+Backtracking is used to avoid forming redundant anagrams.  If the
+function selects a character to concatentate to a partial anagram, and
+that same character is present in the remaining string, then the
+function skips that character and selects a new character from the
+remaining string.
+</p>
+
+
+<p>
+<img src="../images/tree.png"  alt="../images/tree.png" />
+</p>
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">allAnagrams</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">string</span>, <span style="color: #ef2929;">collection</span>, <span style="color: #ef2929;">anagram</span>, <span style="color: #ef2929;">character</span>) {
+    <span style="color: #ad7fa8;">'use strict'</span>;
+    <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">initial</span>
+    collection = collection || [];
+    anagram = anagram || <span style="color: #ad7fa8;">''</span>;
+    character = character || string.split(<span style="color: #ad7fa8;">''</span>);
+    <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">i</span>,
+        upper,
+        lower;
+
+    <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">base case</span>
+    &lt;&lt;baseCase&gt;&gt;
+
+   <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">recursion</span>
+   &lt;&lt;recursion&gt;&gt;
+
+   <span style="color: #729fcf;">return</span> collection;
+
+};
+</pre>
+
+
+
+
+
+<pre class="src src-js"> <span style="color: #729fcf;">if</span> (character.length === 0) {
+  collection.push(anagram);
+  <span style="color: #729fcf;">return</span> collection;
+}
+</pre>
+
+
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">for</span> (i=0; i &lt; character.length; i++) {
+  upper = character.slice(i+1);
+  lower = character.slice(0,i);
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">travel down the brach if the character will not appear at another iteration</span>
+  <span style="color: #729fcf;">if</span> (upper.indexOf(character[i]) === -1) {
+      collection =  allAnagrams(string, collection, anagram + character[i], lower.concat(upper));
+  }
+}
+</pre>
+
+</div>
+</div>

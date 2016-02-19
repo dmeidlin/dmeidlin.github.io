@@ -1,0 +1,278 @@
+---
+layout: article
+title: Recursive Callback Functions
+share: #set to false to hide the social media links at the bottom of articles
+comments: #set to true to enable commenting on an article
+ads: #set to true to show ads on the post/page
+published: true
+date: 2016-01-01 #YYYY-MM-DD published date of article
+modified: #YYYY-MM-DD overides published date in blog and used as metadata for search engines
+image: 
+  teaser: recursion_digits-teaser.png #this appears on the archive grid
+  feature: infinity-pier.jpg #this appears when viewing the article
+  credit: #name of the person or site you wish to credit
+  creditlink: #url to the person's site or licensing
+categories: javascript
+tags: 
+---
+
+
+
+
+
+<p>
+The versatile <code>reduce()</code> can handle recursion if you know how to pass 
+it a recursive callback function.  Learn how, now.
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Design the Recursive Algorithm</a></li>
+<li><a href="#sec-2">2 Refactor the Recusrsive Agorithm for Debugging</a></li>
+<li><a href="#sec-3">3 Refactor to Return all the Recursive Variables</a></li>
+<li><a href="#sec-4">4 Refactor as a Callback Function</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Design the Recursive Algorithm</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>The first step is to implement a recursive algorithm. For this example, 
+The <code>allAnagrams()</code> recursive function described in <a href="2015-12-30-all_anagrams.html">another post</a> will 
+be used. This function is passed a given <code>string</code> and returns an array 
+whose elements are each a unique anagram of <code>string</code>.  
+</p>
+<p>
+The function requires <code>string</code> to be passed in, but it also introduces 
+three more recursive variables that are passed to each recursive call 
+to <code>allAnagrams()</code> in the function body: <code>collection</code> is the results 
+array that is eventually returned; <code>anagram</code> is the current state of 
+the anagram as it travels down a branch of the recursion tree; and 
+<code>character</code> is what remains after removing the most recent character 
+from <code>string</code>.
+</p>
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">allAnagrams</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">string</span>, <span style="color: #ef2929;">collection</span>, <span style="color: #ef2929;">anagram</span>, <span style="color: #ef2929;">character</span>) {
+  <span style="color: #ad7fa8;">'use strict'</span>;
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">initial</span>
+  collection = collection || [];
+  anagram = anagram || <span style="color: #ad7fa8;">''</span>;
+  character = character || string.split(<span style="color: #ad7fa8;">''</span>);
+  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">i</span>,
+      upper,
+      lower;
+
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">base case</span>
+  <span style="color: #729fcf;">if</span> (character.length === 0) {
+    collection.push(anagram);
+    <span style="color: #729fcf;">return</span> collection;
+  }
+
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">recursion</span>
+  <span style="color: #729fcf;">for</span> (i=0; i &lt; character.length; i++) {
+    upper = character.slice(i+1);
+    lower = character.slice(0,i);
+    <span style="color: #729fcf;">if</span> (upper.indexOf(character[i]) === -1) {
+      collection =  allAnagrams(string, collection, anagram + character[i], lower.concat(upper));
+    } 
+  }
+
+  <span style="color: #729fcf;">return</span> collection;
+
+};
+</pre>
+
+
+<p>
+In this function the three main elements required for a recursive
+algorithm can be seen.  The recursive variables must be set to proper
+default values during the initial call.  A suitable base case must be
+defined to stop the recursion.  A recursive call to <code>allAnagrams()</code> must
+be made with a modified version of the recursive variables passed in.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Refactor the Recusrsive Agorithm for Debugging</h2>
+<div class="outline-text-2" id="text-2">
+
+<p>Debugging recursive algorithms can be a nuissance because of the need
+to trace the values of recursive variables by stepping through repeated 
+calls to the same function.
+</p>
+<p>
+This tracing through the call stack can often be avoided by using the 
+console functions <code>console.groupCollapsed()</code> and <code>console.groupEnd()</code>.
+</p>
+
+
+
+<pre class="src src-js">  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">recursion</span>
+  <span style="color: #729fcf;">for</span> (i=0; i &lt; character.length; i++) {
+    upper = character.slice(i+1);
+    lower = character.slice(0,i);
+    console.groupCollapsed();
+    <span style="color: #729fcf;">if</span> (upper.indexOf(character[i]) === -1) {
+      collection =  allAnagrams(string, collection, anagram + character[i], lower.concat(upper));
+    }
+    console.dir(collection); 
+    console.log(anagram);
+    console.groupEnd();
+  }
+</pre>
+
+
+<p>
+The <code>console.groupCollapsed()</code> call will provide the console.dir information in a collapsed 
+form that can be expanded by clicking an arrow, and it will be indented.  The <code>console.groupEnd()</code> 
+call ends the current level of indentation.
+</p>
+<p>
+Each recursive call will produce another nested display in the console.  We can now easily check 
+the displayed values of the recursive variables without the need of stepping through the call 
+stack.
+</p>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">Refactor to Return all the Recursive Variables</h2>
+<div class="outline-text-2" id="text-3">
+
+<p>Displaying the values of the recursive variables in the console can be a tremendous help 
+during debugging, but it would be even better to have access to these values for later use 
+in our code.  
+</p>
+<p>
+This is easily accomplished by storing the recursive variable values in a single object.  
+The object can also store relevant related information, such as the total number of unique 
+anagrams in this example.
+</p>
+<p>
+By returning the object, we can access the recursive data and pass it to other variables or 
+functions.  For example, the total count of anagrams could be accessed with
+</p>
+
+
+<pre class="src src-js">allAnagrams(<span style="color: #ad7fa8;">'string'</span>).count
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4">Refactor as a Callback Function</h2>
+<div class="outline-text-2" id="text-4">
+
+<p>While we are refactoring by combining the recursive variable into a
+single object, the recursive function can also easily be cast into the
+form of the callback function passed into <code>reduce()</code>.  To use reduce
+we must first <code>split()</code> the string into an array.
+</p>
+<p>
+The native JS array method <code>reduce()</code> has multiple uses for operating
+on a given array such as mapping, flattening, filtering, truth
+testing, and of course reducing.
+</p>
+<p>
+Whenever <code>reduce()</code> is called the callback function passed in takes the following 
+form:
+</p>
+
+
+<pre class="src src-js"><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">callback</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">element</span>, <span style="color: #ef2929;">index</span>, <span style="color: #ef2929;">array</span>) {
+<span style="color: #4f4f4f; font-style: italic;">/*</span><span style="color: #4f4f4f; font-style: italic;">some code here looping through each element of array...*/</span>
+<span style="color: #729fcf;">return</span> memo
+};
+</pre>
+
+<p>
+The callback function will act on each <code>element</code> at <code>index</code> of <code>array</code> and pass the 
+accumulated value <code>memo</code> to the next iteration.  The <code>reduce()</code> call ends by returning 
+the final value of the accumulator.
+</p>
+<p>
+The most important points to rememeber when calling <code>reduce</code> recursively in the body of 
+the callback function are:
+</p>
+<ol>
+<li>memo must be an object, and any recursive variables that are not <code>element</code>, <code>index</code>, 
+</li>
+</ol>
+
+<p>or <code>array</code> must be properties of memo which is passed as the initial value of the next 
+call to <code>reduce()</code>; and 
+</p>
+<ol>
+<li>objects are passed by reference not by value, so a shallow copy of the modified 
+</li>
+</ol>
+
+<p>recursive variables must be created and passed in to the next recursive call to <code>reduce()</code> 
+for the callback function to work properly.
+</p>
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">allAnagrams</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">memo</span>, <span style="color: #ef2929;">character</span>, <span style="color: #ef2929;">index</span>, <span style="color: #ef2929;">word</span>) {
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">initialize variables passed between recursive calls</span>
+  memo.anagram = memo.anagram || <span style="color: #ad7fa8;">''</span>;
+  memo.collection = memo.collection || 0;
+  memo.letters = memo.letters || word.slice();
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">make shallow copies of word and memo, and remove the character at index</span>
+  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">branchWord</span> = memo.letters.slice()
+  branchWord.splice(index, 1);
+  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">branchCollection</span> = memo.collection;
+  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">branchAnagram</span> = memo.anagram + character;
+  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">branchMemo</span> = {
+    anagram: branchAnagram,
+    collection: branchCollection,
+    letters: branchWord
+  };
+    <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">base case</span>
+  <span style="color: #729fcf;">if</span> (branchMemo.letters.length === 0) {
+    memo.collection += 1;
+    <span style="color: #729fcf;">return</span> memo;
+  }
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">recurse</span>
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">console.groupCollapsed('%s:recursion', character);</span>
+  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">result</span> = branchWord.reduce(allAnagrams, branchMemo);
+  memo.collection = result.collection;
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">console.dir(memo);</span>
+  <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">console.groupEnd();</span>
+
+  <span style="color: #729fcf;">return</span> memo;
+};
+
+<span style="color: #729fcf;">var</span> <span style="color: #ef2929;">characters</span> = <span style="color: #ad7fa8;">'sdk'</span>.split(<span style="color: #ad7fa8;">''</span>);
+
+console.log( <span style="color: #ad7fa8;">'sdk'</span>.split(<span style="color: #ad7fa8;">''</span>).reduce(allAnagrams, {}) );
+console.log( <span style="color: #ad7fa8;">'sdk'</span>.split(<span style="color: #ad7fa8;">''</span>).reduce(allAnagrams, {}).collection );
+</pre>
+
+
+<pre class="example">
+{ anagram: '', collection: 6, letters: [ 's', 'd', 'k' ] }
+6
+undefined
+</pre>
+
+
+<p>
+In this version, collection now stores the total number of unique
+anagrams.  We can now apply this to teh string literal <code>sdk</code> to get
+the correct answer <code>6</code>.
+</p>
+</div>
+</div>

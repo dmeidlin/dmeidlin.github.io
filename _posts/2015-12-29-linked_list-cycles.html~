@@ -1,0 +1,226 @@
+---
+layout: post
+title: Linked List Cycles
+published: true
+date: 2015-12-25
+categories: toy-problem, data-structure, racing-algorithm
+tags: post, org-mode, emacs
+---
+
+
+
+<p>
+Write a function that returns true if a linked list contains a cycle,
+or false if it terminates somewhere.
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Explanation</a>
+<ul>
+<li><a href="#sec-1-1">1.1 Constraints</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2 Solution</a>
+<ul>
+<li><a href="#sec-2-1">2.1 given a node called <code>head</code> that begins a linked list</a>
+<ul>
+<li><a href="#sec-2-1-1">2.1.1 create two pointer-nodes called <code>tortoise</code> and <code>hare</code> that point to <code>head</code></a></li>
+<li><a href="#sec-2-1-2">2.1.2 iteratively increment the pointers along the list</a>
+<ul>
+<li><a href="#sec-2-1-2-1">2.1.2.1 increment <code>tortise</code> and <code>hare</code> once</a></li>
+<li><a href="#sec-2-1-2-2">2.1.2.2 increment <code>hare</code> once again</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Explanation</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>Generally, we assume that a linked list will terminate in a null next
+pointer, as follows:
+</p>
+<p>
+<code>A -&gt; B -&gt; C -&gt; D -&gt; E -&gt; null</code>
+A ‘cycle’ in a linked list is when traversing the list would result in
+visiting the same nodes over and over.
+</p>
+<p>
+This is caused by pointing a node in the list to another node that
+already appeared earlier in the list. Example:
+</p>
+
+
+<pre class="src src-example">  A -&gt; B -&gt; C
+       ^    |
+       |    v
+       E &lt;- D
+</pre>
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">Constraints</h3>
+<div class="outline-text-3" id="text-1-1">
+
+<ol>
+<li>do this in linear time;
+</li>
+<li>do this in constant space; and
+</li>
+<li>do not mutate the original nodes in any way.
+</li>
+</ol>
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Solution</h2>
+<div class="outline-text-2" id="text-2">
+
+<p> There are <a href="http://somethingemporium.com/2007/7/cyclic-linked-lists-and-racing-pointers-list-node-pointer">several ways</a> of solving this problem; however, the solution
+ which uses racing pointers will satisfy all three of the constraints. 
+</p>
+<p>
+Two additional pointer-nodes are created that will traverse a given
+ linked list.  One pointer will move a single step along the list on
+ each iteration while the other node will move two steps per
+ iteration.
+</p>
+<p>
+When the faster pointer enters a cycle it will come up from behind the
+ slower pointer and eventually arrive at the same location in the
+ list.  The function returns true if this coincident event happens,
+ and returns false otherwise.
+</p>
+
+</div>
+
+<div id="outline-container-2-1" class="outline-3">
+<h3 id="sec-2-1">given a node called <code>head</code> that begins a linked list</h3>
+<div class="outline-text-3" id="text-2-1">
+
+<p>A constructor is defined for the nodes which form the linked list.  Any instance 
+of <code>Node</code> links to another node by assigning the node to its <code>next</code> property. 
+</p>
+
+
+<pre class="src src-js"> <span style="color: #729fcf;">function</span> <span style="color: #edd400; font-weight: bold;">Node</span>(<span style="color: #ef2929;">val</span>) {
+  <span style="color: #ad7fa8;">'use strict'</span>;
+  <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">obj</span> = {};
+  obj.value = val || <span style="color: #73d216;">null</span>;
+  obj.next = <span style="color: #73d216;">null</span>;
+  <span style="color: #729fcf;">return</span> obj;
+}
+</pre>
+
+
+
+</div>
+
+<div id="outline-container-2-1-1" class="outline-4">
+<h4 id="sec-2-1-1">create two pointer-nodes called <code>tortoise</code> and <code>hare</code> that point to <code>head</code></h4>
+<div class="outline-text-4" id="text-2-1-1">
+
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">hasCycle</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">head</span>) {
+    <span style="color: #ad7fa8;">'use strict'</span>;
+    <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">tortoise</span> = <span style="color: #729fcf;">new</span> <span style="color: #228b22; font-weight: bold;">Node</span>();
+    <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">hare</span> = <span style="color: #729fcf;">new</span> <span style="color: #228b22; font-weight: bold;">Node</span>();
+
+    tortoise.next = head;
+    hare.next = head;
+
+    &lt;&lt;incrementTheList&gt;&gt;
+};
+</pre>
+
+</div>
+
+</div>
+
+<div id="outline-container-2-1-2" class="outline-4">
+<h4 id="sec-2-1-2">iteratively increment the pointers along the list</h4>
+<div class="outline-text-4" id="text-2-1-2">
+
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">while</span> (<span style="color: #73d216;">true</span>) {
+  &lt;&lt;stepOnce&gt;&gt;
+  &lt;&lt;stepTwice&gt;&gt;
+}
+</pre>
+
+
+</div>
+
+<div id="outline-container-2-1-2-1" class="outline-5">
+<h5 id="sec-2-1-2-1">increment <code>tortise</code> and <code>hare</code> once</h5>
+<div class="outline-text-5" id="text-2-1-2-1">
+
+<ul>
+<li id="sec-2-1-2-1-1">if either pointer points to null return false<br/>
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">if</span> (!tortoise.next || !hare.next) {
+    <span style="color: #729fcf;">return</span> <span style="color: #73d216;">false</span>;
+} <span style="color: #729fcf;">else</span> {
+    tortoise.next = tortoise.next.next;
+    hare.next = hare.next.next;
+}
+</pre>
+
+</li>
+</ul>
+</div>
+
+</div>
+
+<div id="outline-container-2-1-2-2" class="outline-5">
+<h5 id="sec-2-1-2-2">increment <code>hare</code> once again</h5>
+<div class="outline-text-5" id="text-2-1-2-2">
+
+<ul>
+<li id="sec-2-1-2-2-1">if either pointer points to null return false<br/>
+</li>
+</ul>
+<ul>
+<li id="sec-2-1-2-2-2">if tortoise and hare point to the same node return true<br/>
+
+
+
+<pre class="src src-js"><span style="color: #729fcf;">if</span> (!tortoise.next || !hare.next) {
+  <span style="color: #729fcf;">return</span> <span style="color: #73d216;">false</span>;
+}
+<span style="color: #729fcf;">if</span> (hare.next.next === tortoise.next) {
+  <span style="color: #729fcf;">return</span> <span style="color: #73d216;">true</span>;
+} <span style="color: #729fcf;">else</span> {
+  hare.next = hare.next.next;
+}
+</pre>
+
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>

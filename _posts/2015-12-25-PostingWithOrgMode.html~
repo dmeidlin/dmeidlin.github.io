@@ -1,0 +1,58 @@
+---
+layout: post
+title: Posting with Org-Mode
+published: true
+date: 2015-12-25
+categories: emacs, org-mode
+tags: post, org-mode, emacs
+---
+<p>
+The pseudocode may be entered as headingd in org-mode.
+</p>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 For a given amount of pence called 'amount'</a>
+<ul>
+<li><a href="#sec-1-1">1.1 find all values.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">For a given amount of pence called 'amount'</h2>
+<div class="outline-text-2" id="text-1">
+
+
+
+
+<pre class="src src-js"><span class="linenr">1:  </span><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">myFunction</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">arg1</span>, <span style="color: #ef2929;">arg2</span>) {
+<span class="linenr">2:  </span>    <span style="color: #ad7fa8;">'use strict'</span>;
+<span class="linenr">3:  </span>    <span style="color: #729fcf;">return</span> arg1;
+<span class="linenr">4:  </span>};
+<span class="linenr">5:  </span>
+<span class="linenr">6:  </span>console.log(myFunction(<span style="color: #ad7fa8;">'hello'</span>));
+</pre>
+
+
+<p>
+The console returns our answer.
+</p>
+<pre class="example">
+hello
+</pre>
+
+
+
+</div>
+
+<div id="outline-container-1-1" class="outline-3">
+<h3 id="sec-1-1">find all values.</h3>
+<div class="outline-text-3" id="text-1-1">
+
+</div>
+</div>
+</div>

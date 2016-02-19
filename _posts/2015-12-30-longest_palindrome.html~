@@ -1,0 +1,195 @@
+---
+layout: post
+title: Longest Palindrome
+published: true
+date: 2015-12-25
+categories: toy-problem, data-structure, racing-algorithm
+tags: post, org-mode, emacs
+---
+
+
+
+<p>
+Implement a function that finds the longest palindrome in a given
+string. For example, in the string “My dad is a racecar athlete”, the
+longest palindrome is “a racecar a”. Count whitespaces as valid
+characters. Other palindromes in the above string include “dad”,
+“ete”, “ dad “ (including whitespace on each side of dad).
+</p>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Solution</a></li>
+<li><a href="#sec-2">2 Resources</a></li>
+<li><a href="#sec-3">3 References</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1">Solution</h2>
+<div class="outline-text-2" id="text-1">
+
+<p>There are several ways to solve this problem each with its own degree of time 
+complexity.  The solution here involves:
+</p><ul>
+<li>reversing the given string called <code>string</code> and assigning it to <code>reverseChar</code>;
+</li>
+<li>iterating through the substrings of <code>reverseChar</code>; and
+</li>
+<li>searching in <code>string</code> for the substring.
+</li>
+</ul>
+
+
+
+
+<pre class="src src-js"><span class="linenr"> 1:  </span><span style="color: #729fcf;">var</span> <span style="color: #ef2929;">longestPalindrome</span> = <span style="color: #729fcf;">function</span> (<span style="color: #ef2929;">string</span>) {
+<span class="linenr"> 2:  </span>    <span style="color: #ad7fa8;">'use strict'</span>;
+<span class="linenr"> 3:  </span>     <span style="color: #729fcf;">var</span> <span style="color: #ef2929;">i</span>, <span style="color: #ef2929;">j</span>, <span style="color: #ef2929;">reverseChar</span>;
+<span class="linenr"> 4:  </span>
+<span class="linenr"> 5:  </span>     &lt;&lt;makeReverseString&gt;&gt;
+<span class="linenr"> 6:  </span>    <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">form reversed substrings from largest to smallest</span>
+<span class="linenr"> 7:  </span>    <span style="color: #729fcf;">for</span> (i=0; i &lt; reverseChar.length; i++) {
+<span class="linenr"> 8:  </span>      <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">return the first substring found in string</span>
+<span class="linenr"> 9:  </span>      &lt;&lt;searchForSubstring&gt;&gt;
+<span class="linenr">10:  </span>
+<span class="linenr">11:  </span>    }
+<span class="linenr">12:  </span>    <span style="color: #729fcf;">return</span> <span style="color: #ad7fa8;">''</span>;
+<span class="linenr">13:  </span>};
+<span class="linenr">14:  </span>
+</pre>
+
+
+<p>
+The time complexity of reversing <code>string</code> is linear, and the forming
+and searching for substrings uses a loop nested inside of another
+loop: quadratic time-complexity.  The overall time-complexity for this
+intuitive algorithm is, therefore, O3.
+</p>
+<p>
+We generally find that solutions that are intuitive but obvious tend
+to be slow while solutions that are clever but arcane tend to be fast;
+i.e. they have low time-complexity.  An example in contrast to our solution is
+<a href="#Manacher-s">Manacher's</a> algorithm which has linear time-complexity.
+</p>
+<p>
+An important consideration easily overlooked, however, in the analysis
+of time-complexity for JavaScript code is the time-complexity of the
+browser engine running the code.  A given piece of code runs at
+different speeds depending on which browser is executing it.  A clever
+algorithm with low time-complexity may run slower in Safari than an
+intuitive algorithm executing in Chrome.
+</p>
+<p>
+In our intuitive solution to finding the largest palindrome we first
+reverse the string passed with methods native to JavaScript:
+</p>
+
+
+<pre class="src src-js"><span class="linenr">15:  </span>reverseChar = string.split(<span style="color: #ad7fa8;">""</span>).reverse().join(<span style="color: #ad7fa8;">''</span>);
+</pre>
+
+
+<p>
+There are&ndash;at least&ndash;ten different <a href="#ways-of-reversing-a-string">ways of reversing a string</a>, and we
+are using the easiest, and arguably, the most intuitive way available
+to a developer: the one involving native methods.  
+</p>
+<p>
+We may attempt to improve the speed of our algorithm by implementing
+some more clever and complex way of reversing the string; however,
+reversing the string with native methods in IE is faster than any of
+the other nine algorithms when executing in Safari or Firefox (see
+<a href="#sec-3">References</a>).
+</p>
+<p>
+Only when the clever algorithms are executing in Chrome do they run
+faster than native methods executing in IE, but this is only true for
+two of the nine clever algorithms.
+</p>
+<p>
+Chrome is typically fast relative to other
+browsers; nevertheless, it also does not suffice to assume that a
+given browser will always be superior to another.  When the
+reverse-string algorithm is implemented with native methods it runs
+slower in Chrome, Safari, and Firefox than in IE.
+</p>
+<p>
+We see, even in this simple example of reversing a string, there is
+not a single algorithm that could be deployed that will always be the
+fastest for every browser.  The fastest option for Chrome will not be
+the fastest option for IE and visa versa.
+</p>
+<p>
+The only reliable way to ensure that a user experiences the smallest 
+execution time possible for his or her browser is to load code 
+optimized for that particular browser.  The developer can benchmark the 
+code in the vaious browsers using a web service such as <a href="#JSPref">JSPref</a>.
+</p>
+<p>
+The function searches <code>string</code> for Substrings of <code>reverseChar</code>. The first 
+match found is returned by the function as the largest palindrome in <code>string</code>.
+<code>string</code> and <code>reverseChar</code> have the same <code>length</code>, and the substrings 
+consist of:
+</p><ul>
+<li>1 of length <code>length</code>
+</li>
+<li>2 of length <code>length</code> - 1
+</li>
+<li>3 of length <code>length</code> - 2
+</li>
+<li>&hellip;
+</li>
+</ul>
+
+
+
+
+<pre class="src src-js"><span class="linenr">16:  </span><span style="color: #729fcf;">for</span> (j = 0; j &lt; i+1; j++) {
+<span class="linenr">17:  </span>       <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">reject every trivial match of a single character</span>
+<span class="linenr">18:  </span>    <span style="color: #729fcf;">if</span>(reverseChar.substring(j, reverseChar.length - i + j).length &gt; 1
+<span class="linenr">19:  </span>       &amp;&amp; string.search(reverseChar
+<span class="linenr">20:  </span>            .substring(j, reverseChar.length - i + j)) !== -1) {
+<span class="linenr">21:  </span>             <span style="color: #4f4f4f; font-style: italic;">//</span><span style="color: #4f4f4f; font-style: italic;">and return the first large match found</span>
+<span class="linenr">22:  </span>    <span style="color: #729fcf;">return</span> reverseChar.substring(j, reverseChar.length - i + j);
+<span class="linenr">23:  </span>    }
+<span class="linenr">24:  </span>}
+</pre>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2">Resources</h2>
+<div class="outline-text-2" id="text-2">
+
+<ul>
+<li><a href="http://jsperf.com/">JSPref</a> <a name="JSPref" class="target">JSPref</a> 
+</li>
+</ul>
+
+
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3">References</h2>
+<div class="outline-text-2" id="text-3">
+
+<ul>
+<li><a href="http://jsperf.com/string-reverse-function-performance">String Reverse Function Performance - JSPref</a>
+</li>
+<li><a href="http://eddmann.com/posts/ten-ways-to-reverse-a-string-in-javascript/">Ten Ways to Reverse a String in JavaScript</a> <a name="ways-of-reversing-a-string" class="target">ways of reversing a string</a> 
+</li>
+<li><a href="http://www.geeksforgeeks.org/manachers-algorithm-linear-time-longest-palindromic-substring-part-1/<<">Manacher's Algorithm</a> <a name="Manacher-s" class="target">Manacher's</a> 
+</li>
+</ul>
+
+</div>
+</div>
